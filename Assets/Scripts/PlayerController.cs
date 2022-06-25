@@ -11,12 +11,13 @@ public class PlayerController: MonoBehaviour
     float xInput, zInput;
     float xMouse;
 
-    public float mouseRotation;
+    public float mouseRotation { get; private set; }
     float wasdRotation;
     float internalRotation;
+    float displayRotation;
+    public Vector3 direction;
 
     Animator anim;
-
 
     private void Awake()
     {
@@ -28,11 +29,23 @@ public class PlayerController: MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetInput();
+        Calculate();
+        Rotate();
+        Walk();
+        Animate();
+    }
+
+    private void GetInput()
+    {
         xMouse = Input.GetAxis("Mouse X");
         xInput = -Input.GetAxisRaw("Horizontal");
         zInput = +Input.GetAxisRaw("Vertical");
+    }
 
-        Vector3 direction = new Vector3(xInput, 0, zInput).normalized;
+    private void Calculate()
+    {
+        direction = new Vector3(xInput, 0, zInput).normalized;
 
         if (direction != Vector3.zero)
         {
@@ -50,7 +63,7 @@ public class PlayerController: MonoBehaviour
         else if (displayDiff < -180.0f)
             displayDiff += 360.0f;
 
-        float displayRotation = transform.eulerAngles.y;
+        displayRotation = transform.eulerAngles.y;
 
         float dth = rotationVelocity * Time.deltaTime;
         if (displayDiff > dth)
@@ -59,16 +72,24 @@ public class PlayerController: MonoBehaviour
             displayRotation -= dth;
         else
             displayRotation = internalRotation;
+    }
 
+    private void Rotate()
+    {
         transform.eulerAngles = new Vector3(0, displayRotation, 0);
+    }
 
-        // Debug.Log("DR: " + displayRotation + " / IR: " + internalRotation);
-
+    private void Walk()
+    {
         float internalRotationInRad = Mathf.Deg2Rad * internalRotation;
         transform.localPosition +=
             new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad))
             * direction.magnitude * Time.deltaTime * speed;
+    }
 
+    private void Animate()
+    {
         anim.SetBool("isWalking", direction != Vector3.zero);
     }
+    
 }
