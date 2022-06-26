@@ -5,24 +5,26 @@ using UnityEngine;
 public class PlayerController: MonoBehaviour
 {
     public float speed;
-    public Vector2 rotationSensitivity;
+    public Vector2 mouseSensitivity;
     public float rotationVelocity;
 
     float xInput, zInput;
-    float xMouse;
+    float xMouse, yMouse;
 
-    public float mouseRotation { get; private set; }
+    public float mouseRotationX { get; private set; }
+    public float mouseRotationY { get; private set; }
     float wasdRotation;
     float internalRotation;
     float displayRotation;
-    public Vector3 direction;
+    Vector3 direction;
 
     Animator anim;
 
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
-        mouseRotation = transform.eulerAngles.y;
+        mouseRotationX = transform.eulerAngles.y;
+        mouseRotationY = 0.0f;
         wasdRotation = 0.0f;
     }
 
@@ -39,6 +41,7 @@ public class PlayerController: MonoBehaviour
     private void GetInput()
     {
         xMouse = Input.GetAxis("Mouse X");
+        yMouse = Input.GetAxis("Mouse Y");
         xInput = -Input.GetAxisRaw("Horizontal");
         zInput = +Input.GetAxisRaw("Vertical");
     }
@@ -53,8 +56,8 @@ public class PlayerController: MonoBehaviour
             if (direction.x > 0)
                 wasdRotation *= -1.0f;
         }
-        mouseRotation += xMouse * rotationSensitivity.x;
-        internalRotation = mouseRotation + wasdRotation;
+        mouseRotationX += xMouse * mouseSensitivity.x;
+        internalRotation = mouseRotationX + wasdRotation;
         internalRotation -= 360.0f * Mathf.Floor((internalRotation + 180.0f) / 360.0f);
 
         float displayDiff = internalRotation - transform.eulerAngles.y;

@@ -16,7 +16,7 @@ public class ThirdPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float trueRotation = target.GetComponent<PlayerController>().mouseRotation;
+        float trueRotation = target.GetComponent<PlayerController>().mouseRotationX;
 
         float angle = Mathf.Deg2Rad * trueRotation;
         Vector3 relZUnit = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
