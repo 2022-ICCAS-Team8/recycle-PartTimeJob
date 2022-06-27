@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Trashbin
+  - Plastic
+  - Metal
+  - Glass
+  - Paper
+  - Garbage
   layers:
   - Default
   - TransparentFX
