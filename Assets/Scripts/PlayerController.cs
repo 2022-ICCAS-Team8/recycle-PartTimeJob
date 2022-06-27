@@ -5,34 +5,56 @@ using UnityEngine;
 public class PlayerController: MonoBehaviour
 {
     public float speed;
-    public Vector2 rotationSensitivity;
+    public Vector2 mouseSensitivity;
     public float rotationVelocity;
 
     float xInput, zInput;
-    float xMouse;
+    float xMouse, yMouse;
 
-    public float mouseRotation;
+    public float mouseRotationX { get; private set; }
+    public float mouseRotationY { get; private set; }
+    public float rotationYMin;
+    public float rotationYMax;
     float wasdRotation;
     float internalRotation;
+    float displayRotation;
+    Vector3 direction;
 
     Animator anim;
-
 
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
-        mouseRotation = transform.eulerAngles.y;
+        mouseRotationX = transform.eulerAngles.y;
+        mouseRotationY = 0.0f;
         wasdRotation = 0.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        GetInput();
+        Calculate();
+        Rotate();
+        Walk();
+        Animate();
+    }
+
+    private void GetInput()
+    {
         xMouse = Input.GetAxis("Mouse X");
+        yMouse = Input.GetAxis("Mouse Y");
         xInput = -Input.GetAxisRaw("Horizontal");
         zInput = +Input.GetAxisRaw("Vertical");
+    }
 
-        Vector3 direction = new Vector3(xInput, 0, zInput).normalized;
+    private void Calculate()
+    {
+        direction = new Vector3(xInput, 0, zInput).normalized;
+
+        mouseRotationX += xMouse * mouseSensitivity.x;
+        mouseRotationY += yMouse * mouseSensitivity.y;
+        mouseRotationY = Mathf.Clamp(mouseRotationY, -rotationYMax, -rotationYMin);
 
         if (direction != Vector3.zero)
         {
@@ -40,8 +62,7 @@ public class PlayerController: MonoBehaviour
             if (direction.x > 0)
                 wasdRotation *= -1.0f;
         }
-        mouseRotation += xMouse * rotationSensitivity.x;
-        internalRotation = mouseRotation + wasdRotation;
+        internalRotation = mouseRotationX + wasdRotation;
         internalRotation -= 360.0f * Mathf.Floor((internalRotation + 180.0f) / 360.0f);
 
         float displayDiff = internalRotation - transform.eulerAngles.y;
@@ -50,7 +71,7 @@ public class PlayerController: MonoBehaviour
         else if (displayDiff < -180.0f)
             displayDiff += 360.0f;
 
-        float displayRotation = transform.eulerAngles.y;
+        displayRotation = transform.eulerAngles.y;
 
         float dth = rotationVelocity * Time.deltaTime;
         if (displayDiff > dth)
@@ -59,16 +80,24 @@ public class PlayerController: MonoBehaviour
             displayRotation -= dth;
         else
             displayRotation = internalRotation;
+    }
 
+    private void Rotate()
+    {
         transform.eulerAngles = new Vector3(0, displayRotation, 0);
+    }
 
-        // Debug.Log("DR: " + displayRotation + " / IR: " + internalRotation);
-
+    private void Walk()
+    {
         float internalRotationInRad = Mathf.Deg2Rad * internalRotation;
         transform.localPosition +=
             new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad))
             * direction.magnitude * Time.deltaTime * speed;
+    }
 
+    private void Animate()
+    {
         anim.SetBool("isWalking", direction != Vector3.zero);
     }
+    
 }
