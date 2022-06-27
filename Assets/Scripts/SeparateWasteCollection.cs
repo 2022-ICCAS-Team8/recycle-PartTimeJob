@@ -1,24 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SeparateWasteCollection : MonoBehaviour
 {
     public RectTransform uiGroup;
-    public Animator anim;
+    GameObject nearObject;
 
-    //public Player enterPlayer;
+    public Text txtType;
+    public GameObject throwObject;
 
-    public void Enter()
+
+    private void OnCollisionStay(Collision collision)
     {
-        //enterPlayer = player; 
-        anim.SetTrigger("openLid");
-        uiGroup.anchoredPosition = Vector3.zero;
+        if (collision.collider.gameObject.CompareTag("Trashbin"))
+        {
+            uiGroup.anchoredPosition = Vector3.zero;
+            //화면 회전 고정
+            nearObject = collision.gameObject;
+            Interaction();
+        }
     }
 
-    void Exit()
+    private void OnCollisionExit(Collision collision)
     {
-        anim.SetTrigger("closeLid");
-        uiGroup.anchoredPosition = Vector3.down*1000;
+        uiGroup.anchoredPosition = Vector3.down * 1000;
+        nearObject = null;
+    }
+
+    void Interaction()
+    {
+        TrashType trashtype = nearObject.GetComponent<TrashType>();
+        txtType.text = trashtype.type.ToString();
     }
 }
