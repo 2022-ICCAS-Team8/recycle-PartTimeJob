@@ -13,6 +13,8 @@ public class PlayerController: MonoBehaviour
 
     public float mouseRotationX { get; private set; }
     public float mouseRotationY { get; private set; }
+    public float rotationYMin;
+    public float rotationYMax;
     float wasdRotation;
     float internalRotation;
     float displayRotation;
@@ -50,13 +52,16 @@ public class PlayerController: MonoBehaviour
     {
         direction = new Vector3(xInput, 0, zInput).normalized;
 
+        mouseRotationX += xMouse * mouseSensitivity.x;
+        mouseRotationY += yMouse * mouseSensitivity.y;
+        mouseRotationY = Mathf.Clamp(mouseRotationY, -rotationYMax, -rotationYMin);
+
         if (direction != Vector3.zero)
         {
             wasdRotation = Vector3.Angle(Vector3.forward, direction);
             if (direction.x > 0)
                 wasdRotation *= -1.0f;
         }
-        mouseRotationX += xMouse * mouseSensitivity.x;
         internalRotation = mouseRotationX + wasdRotation;
         internalRotation -= 360.0f * Mathf.Floor((internalRotation + 180.0f) / 360.0f);
 
