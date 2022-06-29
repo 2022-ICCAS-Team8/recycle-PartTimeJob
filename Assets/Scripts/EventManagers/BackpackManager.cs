@@ -12,6 +12,9 @@ public class BackpackManager : MonoBehaviour
 
     // width of border of backpack UI (in pixels)
     const int BACKPACK_GAP = 20;
+    
+    // rotation of the icon in a slot (in degrees, counterclock)
+    const int ICON_ROTATION = -70;
 
     GameObject bpWindow;
     GameObject bpInnerWindow;
@@ -65,6 +68,16 @@ public class BackpackManager : MonoBehaviour
             slot.transform.localPosition = new Vector3(x, y);
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
+
+            //GameObject icon = Instantiate(Resources.Load("Trash Pack Low Poly/Battery1")) as GameObject; //test
+            //icon.name = "Icon";
+            //icon.transform.SetParent(slot.transform);
+            //icon.transform.localPosition = new Vector3(w / 2.0f, -w / 2.0f, 0);
+            //icon.transform.localScale = Vector3.one * 500.0f;
+            //icon.transform.eulerAngles = new Vector3(ICON_ROTATION, 90, 0);
+
+            //icon.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            //icon.GetComponent<MeshRenderer>().receiveShadows = false;
         }
 
         bpWindow.SetActive(true);

@@ -10,6 +10,10 @@ TagManager:
   - Glass
   - Paper
   - Garbage
+  - DoorClosed
+  - DoorOpened
+  - ClosetDoorClosed
+  - ClosetDoorOpened
   layers:
   - Default
   - TransparentFX
