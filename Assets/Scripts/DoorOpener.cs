@@ -1,26 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DoorOpener : MonoBehaviour
 {
+    public GameObject player;
     public Vector3 eyeOffset;
 
     public float detectDistance;
+
+    public GameObject popup;
+    public Text popupLabel;
+
+    void Start()
+    {
+        popup.SetActive(false);
+    }
 
     Ray ray;
     RaycastHit hit;
     GameObject obj;
     void Update()
     {
-        if (Input.GetMouseButton(1)) // right click
+        ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+
+        if (Physics.Raycast(ray, out hit, detectDistance))
         {
-            ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2));
+            obj = hit.transform.gameObject;
 
-            if (Physics.Raycast(ray, out hit, detectDistance))
+            if (obj.tag == "DoorClosed" || obj.tag == "ClosetDoorClosed")
             {
-                obj = hit.transform.gameObject;
+                popupLabel.text = "Right click to open";
+                popup.SetActive(true);
+            }
+            else if (obj.tag == "DoorOpened" || obj.tag == "ClosetDoorOpened")
+            {
+                popupLabel.text = "Right click to close";
+                popup.SetActive(true);
+            }
+            else
+            {
+                popup.SetActive(false);
+            }
 
+            if (Input.GetMouseButtonUp(1)) // right click
+            {
                 if (obj.tag == "DoorClosed")
                     StartCoroutine(OpenDoor(obj));
                 else if (obj.tag == "DoorOpened")
@@ -38,6 +63,7 @@ public class DoorOpener : MonoBehaviour
     {
         obj.tag = "DoorOpened";
         obj.GetComponent<Animator>().Play("Opening");
+        //player.GetComponent<Animator>().SetTrigger("doOpenDoor");
         yield return new WaitForSeconds(.5f);
     }
 
@@ -51,6 +77,7 @@ public class DoorOpener : MonoBehaviour
     {
         obj.tag = "ClosetDoorOpened";
         obj.GetComponent<Animator>().Play("ClosetOpening");
+        //player.GetComponent<Animator>().SetTrigger("doOpenDoor");
         yield return new WaitForSeconds(.5f);
     }
     IEnumerator CloseClosetDoor(GameObject obj)

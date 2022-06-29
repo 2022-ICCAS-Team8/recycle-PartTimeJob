@@ -38,7 +38,7 @@ public class BackpackManager : MonoBehaviour
 
         //test
         for (int i = 0; i < 12; i++)
-            Items.Add(new RecyclableItem(TrashType.Type.Garbage, null));
+            Items.Add(new RecyclableItem((TrashType.Type)Random.Range(1, 5), null));
 
     }
 
