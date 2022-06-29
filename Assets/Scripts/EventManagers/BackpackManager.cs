@@ -20,6 +20,8 @@ public class BackpackManager : MonoBehaviour
     GameObject bpInnerWindow;
     GameObject bpSampleSlot;
 
+    GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
+
     private void Awake()
     {
         Items = new List<RecyclableItem>();
@@ -28,9 +30,15 @@ public class BackpackManager : MonoBehaviour
         bpInnerWindow = GameObject.Find("bp_InnerWindow");
         bpSampleSlot = GameObject.Find("bp_SampleSlot");
 
+        bpSampleIconPlastic = GameObject.Find("bp_SampleIconPlastic");
+        bpSampleIconGlass = GameObject.Find("bp_SampleIconGlass");
+        bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
+        bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
+        bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
+
         //test
         for (int i = 0; i < 12; i++)
-            Items.Add(new RecyclableItem());
+            Items.Add(new RecyclableItem(TrashType.Type.Garbage, null));
 
     }
 
@@ -54,6 +62,7 @@ public class BackpackManager : MonoBehaviour
     public void OpenBackpack()
     {
         float innerWidth = bpInnerWindow.GetComponent<RectTransform>().rect.width;
+        GameObject icon = null;
         // create contents
         for (int i=0; i < Items.Count; i++)
         {
@@ -69,15 +78,20 @@ public class BackpackManager : MonoBehaviour
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
 
-            //GameObject icon = Instantiate(Resources.Load("Trash Pack Low Poly/Battery1")) as GameObject; //test
-            //icon.name = "Icon";
-            //icon.transform.SetParent(slot.transform);
-            //icon.transform.localPosition = new Vector3(w / 2.0f, -w / 2.0f, 0);
-            //icon.transform.localScale = Vector3.one * 500.0f;
-            //icon.transform.eulerAngles = new Vector3(ICON_ROTATION, 90, 0);
+            if (Items[i].Type == TrashType.Type.Plastic)
+                icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Glass)
+                icon = Instantiate(bpSampleIconGlass, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Metal)
+                icon = Instantiate(bpSampleIconMetal, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Paper)
+                icon = Instantiate(bpSampleIconPaper, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Garbage)
+                icon = Instantiate(bpSampleIconGarbage, slot.transform, false);
+            
+            icon.transform.localPosition = new Vector3(0, 0);
+            icon.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
 
-            //icon.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            //icon.GetComponent<MeshRenderer>().receiveShadows = false;
         }
 
         bpWindow.SetActive(true);
@@ -90,7 +104,7 @@ public class BackpackManager : MonoBehaviour
 
         // destroy all children.
         // 'i' must be started from 1, since index 0 means itself, not a child.
-        for (int i=1; i < bpInnerWindow.transform.childCount; i++)
+        for (int i=1+5; i < bpInnerWindow.transform.childCount; i++)
         {
             Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
         }

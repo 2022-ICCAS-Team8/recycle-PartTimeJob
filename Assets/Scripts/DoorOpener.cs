@@ -15,13 +15,10 @@ public class DoorOpener : MonoBehaviour
     {
         if (Input.GetMouseButton(1)) // right click
         {
-            Debug.Log(Screen.width + " " + Screen.height);
             ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2));
 
             if (Physics.Raycast(ray, out hit, detectDistance))
             {
-                Debug.Log("ray hit: " + hit.transform.name);
-
                 obj = hit.transform.gameObject;
 
                 if (obj.tag == "DoorClosed")
