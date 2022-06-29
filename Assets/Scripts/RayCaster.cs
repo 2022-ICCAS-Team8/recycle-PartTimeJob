@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DoorOpener : MonoBehaviour
+public class RayCaster : MonoBehaviour
 {
     public GameObject player;
-    public Vector3 eyeOffset;
 
     public float detectDistance;
 
@@ -29,12 +28,12 @@ public class DoorOpener : MonoBehaviour
         {
             obj = hit.transform.gameObject;
 
-            if (obj.tag == "DoorClosed" || obj.tag == "ClosetDoorClosed")
+            if (obj.CompareTag("DoorClosed") || obj.CompareTag("ClosetDoorClosed"))
             {
                 popupLabel.text = "Right click to open";
                 popup.SetActive(true);
             }
-            else if (obj.tag == "DoorOpened" || obj.tag == "ClosetDoorOpened")
+            else if (obj.CompareTag("DoorOpened") || obj.CompareTag("ClosetDoorOpened"))
             {
                 popupLabel.text = "Right click to close";
                 popup.SetActive(true);
@@ -46,13 +45,16 @@ public class DoorOpener : MonoBehaviour
 
             if (Input.GetMouseButtonUp(1)) // right click
             {
-                if (obj.tag == "DoorClosed")
+                if (obj.CompareTag("DoorClosed"))
                     StartCoroutine(OpenDoor(obj));
-                else if (obj.tag == "DoorOpened")
+
+                else if (obj.CompareTag("DoorOpened"))
                     StartCoroutine(CloseDoor(obj));
-                else if (obj.tag == "ClosetDoorClosed")
+
+                else if (obj.CompareTag("ClosetDoorClosed"))
                     StartCoroutine(OpenClosetDoor(obj));
-                else if (obj.tag == "ClosetDoorOpened")
+
+                else if (obj.CompareTag("ClosetDoorOpened"))
                     StartCoroutine(CloseClosetDoor(obj));
             }
         }

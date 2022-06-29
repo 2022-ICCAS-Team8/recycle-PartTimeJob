@@ -12,9 +12,6 @@ public class BackpackManager : MonoBehaviour
 
     // width of border of backpack UI (in pixels)
     const int BACKPACK_GAP = 20;
-    
-    // rotation of the icon in a slot (in degrees, counterclock)
-    const int ICON_ROTATION = -70;
 
     GameObject bpWindow;
     GameObject bpInnerWindow;
@@ -35,10 +32,6 @@ public class BackpackManager : MonoBehaviour
         bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
         bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
         bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
-
-        //test
-        for (int i = 0; i < 12; i++)
-            Items.Add(new RecyclableItem((TrashType.Type)Random.Range(1, 5), null));
 
     }
 
@@ -118,8 +111,9 @@ public class BackpackManager : MonoBehaviour
             CloseBackpack();
     }
 
-    public void Collect(GameObject gameObject)
+    public void Collect(GameObject obj)
     {
-
+        Items.Add(obj.GetComponent<RecyclableItem>());
+        Destroy(obj);
     }
 }

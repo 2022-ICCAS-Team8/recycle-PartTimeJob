@@ -1,19 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RecyclableItem : MonoBehaviour
 {
-    protected static int COUNT = 0;
+    public GameObject player;
+    public GameObject popup;
 
-    int id;
     public TrashType.Type Type;
     public Sprite Sprite;
+    
+    public float detectDistance;
 
-    public RecyclableItem(TrashType.Type type, Sprite sprite)
+    BackpackManager bm;
+    Renderer r;
+    private void Awake()
     {
-        this.id = COUNT++;
-        this.Type = type;
-        this.Sprite = sprite;
+        bm = GameObject.Find("GameDirector").GetComponent<BackpackManager>();
+        r = GetComponent<Renderer>();
     }
+
+    private void Update()
+    {
+        float dist = Vector3.Distance(transform.position, player.transform.position);
+        if (dist < detectDistance && r.isVisible)
+        {
+            popup.SetActive(true);
+
+            if (Input.GetMouseButtonUp(1)) // rightclick
+            {
+                bm.Collect(this.gameObject);
+            }
+        }
+        else
+        {
+            popup.SetActive(false);
+        }
+    }
+
 }
