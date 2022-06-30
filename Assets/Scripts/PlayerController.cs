@@ -7,18 +7,20 @@ public class PlayerController: MonoBehaviour
     public float speed;
     public Vector2 mouseSensitivity;
     public float rotationVelocity;
-
-    float xInput, zInput;
-    float xMouse, yMouse;
-
     public float mouseRotationX { get; private set; }
     public float mouseRotationY { get; private set; }
     public float rotationYMin;
     public float rotationYMax;
+    public bool isKeyboardFrozen;
+    public bool isMouseFrozen;
+
+    float xKeyInput, zKeyInput;
+    float xMouseInput, yMouseInput;
+
     float wasdRotation;
     float internalRotation;
     float displayRotation;
-    Vector3 direction;
+    Vector3 keyDirection;
 
     Animator anim;
 
@@ -42,24 +44,30 @@ public class PlayerController: MonoBehaviour
 
     private void GetInput()
     {
-        xMouse = Input.GetAxis("Mouse X");
-        yMouse = Input.GetAxis("Mouse Y");
-        xInput = -Input.GetAxisRaw("Horizontal");
-        zInput = +Input.GetAxisRaw("Vertical");
+        xMouseInput = Input.GetAxis("Mouse X");
+        yMouseInput = Input.GetAxis("Mouse Y");
+        xKeyInput = -Input.GetAxisRaw("Horizontal");
+        zKeyInput = +Input.GetAxisRaw("Vertical");
     }
 
     private void Calculate()
     {
-        direction = new Vector3(xInput, 0, zInput).normalized;
+        if (!isKeyboardFrozen)
+            keyDirection = new Vector3(xKeyInput, 0, zKeyInput).normalized;
+        else
+            keyDirection = Vector3.zero;
 
-        mouseRotationX += xMouse * mouseSensitivity.x;
-        mouseRotationY += yMouse * mouseSensitivity.y;
-        mouseRotationY = Mathf.Clamp(mouseRotationY, -rotationYMax, -rotationYMin);
-
-        if (direction != Vector3.zero)
+        if (!isMouseFrozen)
         {
-            wasdRotation = Vector3.Angle(Vector3.forward, direction);
-            if (direction.x > 0)
+            mouseRotationX += xMouseInput * mouseSensitivity.x;
+            mouseRotationY += yMouseInput * mouseSensitivity.y;
+            mouseRotationY = Mathf.Clamp(mouseRotationY, -rotationYMax, -rotationYMin);
+        }
+
+        if (keyDirection != Vector3.zero)
+        {
+            wasdRotation = Vector3.Angle(Vector3.forward, keyDirection);
+            if (keyDirection.x > 0)
                 wasdRotation *= -1.0f;
         }
         internalRotation = mouseRotationX + wasdRotation;
@@ -92,12 +100,11 @@ public class PlayerController: MonoBehaviour
         float internalRotationInRad = Mathf.Deg2Rad * internalRotation;
         transform.localPosition +=
             new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad))
-            * direction.magnitude * Time.deltaTime * speed;
+            * keyDirection.magnitude * Time.deltaTime * speed;
     }
 
     private void Animate()
     {
-        anim.SetBool("isWalking", direction != Vector3.zero);
+        anim.SetBool("isWalking", keyDirection != Vector3.zero);
     }
-    
 }

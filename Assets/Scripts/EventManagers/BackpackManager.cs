@@ -17,6 +17,8 @@ public class BackpackManager : MonoBehaviour
     GameObject bpInnerWindow;
     GameObject bpSampleSlot;
 
+    GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
+
     private void Awake()
     {
         Items = new List<RecyclableItem>();
@@ -25,9 +27,11 @@ public class BackpackManager : MonoBehaviour
         bpInnerWindow = GameObject.Find("bp_InnerWindow");
         bpSampleSlot = GameObject.Find("bp_SampleSlot");
 
-        //test
-        for (int i = 0; i < 12; i++)
-            Items.Add(new RecyclableItem());
+        bpSampleIconPlastic = GameObject.Find("bp_SampleIconPlastic");
+        bpSampleIconGlass = GameObject.Find("bp_SampleIconGlass");
+        bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
+        bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
+        bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
 
     }
 
@@ -51,6 +55,7 @@ public class BackpackManager : MonoBehaviour
     public void OpenBackpack()
     {
         float innerWidth = bpInnerWindow.GetComponent<RectTransform>().rect.width;
+        GameObject icon = null;
         // create contents
         for (int i=0; i < Items.Count; i++)
         {
@@ -65,6 +70,21 @@ public class BackpackManager : MonoBehaviour
             slot.transform.localPosition = new Vector3(x, y);
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
+
+            if (Items[i].Type == TrashType.Type.Plastic)
+                icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Glass)
+                icon = Instantiate(bpSampleIconGlass, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Metal)
+                icon = Instantiate(bpSampleIconMetal, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Paper)
+                icon = Instantiate(bpSampleIconPaper, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.Garbage)
+                icon = Instantiate(bpSampleIconGarbage, slot.transform, false);
+            
+            icon.transform.localPosition = new Vector3(0, 0);
+            icon.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
+
         }
 
         bpWindow.SetActive(true);
@@ -77,7 +97,7 @@ public class BackpackManager : MonoBehaviour
 
         // destroy all children.
         // 'i' must be started from 1, since index 0 means itself, not a child.
-        for (int i=1; i < bpInnerWindow.transform.childCount; i++)
+        for (int i=1+5; i < bpInnerWindow.transform.childCount; i++)
         {
             Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
         }
@@ -91,8 +111,9 @@ public class BackpackManager : MonoBehaviour
             CloseBackpack();
     }
 
-    public void Collect(GameObject gameObject)
+    public void Collect(GameObject obj)
     {
-
+        Items.Add(obj.GetComponent<RecyclableItem>());
+        Destroy(obj);
     }
 }

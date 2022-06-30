@@ -1,18 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class NewBehaviourScript : MonoBehaviour
+public class RecyclableItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject player;
+    public GameObject popup;
+
+    public TrashType.Type Type;
+    public Sprite Sprite;
+    
+    public float detectDistance;
+
+    BackpackManager bm;
+    Renderer r;
+    private void Awake()
     {
-        
+        bm = GameObject.Find("GameDirector").GetComponent<BackpackManager>();
+        r = GetComponent<Renderer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        float dist = Vector3.Distance(transform.position, player.transform.position);
+        if (dist < detectDistance && r.isVisible)
+        {
+            popup.SetActive(true);
+
+            if (Input.GetMouseButtonUp(1)) // rightclick
+            {
+                bm.Collect(this.gameObject);
+            }
+        }
+        else
+        {
+            popup.SetActive(false);
+        }
     }
+
 }
