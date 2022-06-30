@@ -31,6 +31,7 @@ public class RecyclableItem : MonoBehaviour
             if (Input.GetMouseButtonUp(1)) // rightclick
             {
                 bm.Collect(this.gameObject);
+                popup.SetActive(false);
             }
         }
         else

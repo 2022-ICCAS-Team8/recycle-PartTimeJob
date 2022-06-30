@@ -7,11 +7,13 @@ using UnityEngine.UI;
 public class SeparateWasteCollection : MonoBehaviour
 {
     public RectTransform uiGroup;
-    GameObject nearObject;
+    public GameObject nearObject;
 
     public Text txtType;
     public GameObject throwObject;
 
+    public BackpackManager bag;
+    public TrashType trashtype;
 
     private void OnCollisionStay(Collision collision)
     {
@@ -32,7 +34,7 @@ public class SeparateWasteCollection : MonoBehaviour
 
     void Interaction()
     {
-        TrashType trashtype = nearObject.GetComponent<TrashType>();
+        trashtype = nearObject.GetComponent<TrashType>();
         txtType.text = trashtype.type.ToString();
     }
 }
