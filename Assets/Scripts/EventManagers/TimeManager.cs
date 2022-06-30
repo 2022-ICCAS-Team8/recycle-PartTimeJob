@@ -5,14 +5,19 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-  float setTime = 60;
-  public Text gameTime;
-  int min;
-  float sec;
+      float setTime = 60;
+      public Text gameTime;
+      int min;
+      float sec;
+    public GameObject player;
+    int count = 0;
+    bool start = false;
+    public RectTransform ResultGroup;
+    public RectTransform UIGroup;
 
 
-  // [SerializeField]
-  // Text _TimerText;
+    // [SerializeField]
+    // Text _TimerText;
 
     // Start is called before the first frame update
     void Start()
@@ -20,14 +25,23 @@ public class TimeManager : MonoBehaviour
       gameTime.text = string.Format("{0:D2}:{1:D2}", 5, 0);
     }
 
-    // Update is called once per frame
     void Update()
     {
-      Timer();  
-	  }
+        
+        if (start)
+        {
+            Timer();
+        }
+    }
 
-    void Timer(){
-       // 남은 시간을 감소시켜준다.
+    public void Timer(){
+        if (start!=true)
+        {
+            start = true;
+            Debug.Log("타이머 시작");
+        }
+            
+        // 남은 시간을 감소시켜준다.
         setTime -= Time.deltaTime;
         
         if (setTime >= 60f)
@@ -39,7 +53,6 @@ public class TimeManager : MonoBehaviour
             // UI를 표현해준다
             gameTime.text = string.Format("{0:D2}:{1:D2}", min, (int)sec);
         }
-
 
         // 전체시간이 60초 미만일 때
         if (setTime < 60f)
@@ -53,6 +66,31 @@ public class TimeManager : MonoBehaviour
         {
         	// UI 텍스트를 0초로 고정시킴.
           gameTime.text = string.Format("<color=red>{0:D2}:{1:D2}</color>", 0, 0);
+            if (count == 0)
+            {
+                PlayerTransform();
+                Reset_Timer();
+            }
+            else
+                result();
         }
+    }
+
+    private void Reset_Timer()
+    {
+        setTime = 10;
+        count += 1;
+}
+
+    void PlayerTransform()
+    {
+        player.transform.position = new Vector3(-3.7f, 0.5f, -27f);
+    }
+
+    void result()
+    {
+        ResultGroup.anchoredPosition = Vector3.zero;
+        UIGroup.anchoredPosition = Vector3.down * 4000;
+        player.SetActive(false);
     }
 }

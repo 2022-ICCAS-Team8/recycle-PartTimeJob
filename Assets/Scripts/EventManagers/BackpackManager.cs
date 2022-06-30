@@ -70,6 +70,7 @@ public class BackpackManager : MonoBehaviour
             slot.transform.localPosition = new Vector3(x, y);
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
+            slot.AddComponent<BoxCollider2D>();
 
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
