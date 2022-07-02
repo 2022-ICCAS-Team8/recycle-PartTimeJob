@@ -30,6 +30,7 @@ public class SeparateWasteCollection : MonoBehaviour
     {
         uiGroup.anchoredPosition = Vector3.down * 1000;
         nearObject = null;
+        Destroy(throwObject.transform.GetChild(0).gameObject);
     }
 
     void Interaction()

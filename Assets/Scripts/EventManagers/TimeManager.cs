@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-      float setTime = 60;
+      float setTime = 10;
       public Text gameTime;
       int min;
       float sec;
@@ -15,10 +15,15 @@ public class TimeManager : MonoBehaviour
     public RectTransform ResultGroup;
     public RectTransform UIGroup;
 
+    SWCManager SWC;
 
     // [SerializeField]
     // Text _TimerText;
 
+    void Awake()
+    {
+        SWC = GameObject.Find("GameDirector").GetComponent<SWCManager>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -78,17 +83,19 @@ public class TimeManager : MonoBehaviour
 
     private void Reset_Timer()
     {
-        setTime = 10;
+        setTime = 20;
         count += 1;
 }
 
     void PlayerTransform()
     {
+        SWC.InitAll();
         player.transform.position = new Vector3(-3.7f, 0.5f, -27f);
     }
 
     void result()
     {
+        SWC.calcResult();
         ResultGroup.anchoredPosition = Vector3.zero;
         UIGroup.anchoredPosition = Vector3.down * 4000;
         player.SetActive(false);

@@ -4,18 +4,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SWCMainManager : MonoBehaviour
+public class SWCManager : MonoBehaviour
 {
 
-    public SeparateWasteCollection player2;
 
     public int correctAnswerCount;
     public int bpTotalCount; //제한시간 지나서 분리수거장 넘어올때 자동적으로 넘겨받기
     public int TotalCount;
 
+    public GameObject player;
+    public GameObject throwObject;
+
+    BackpackManager bm;
+    string selectItem = "";
+    public Text txtType;
+    
     [Header("Throw 로직")]
     public Button btnThrow;
-    public PlayerController player;
     public RecyclableItem item;
     public float playTime;
     public RectTransform ThrowGroup;
@@ -28,20 +33,34 @@ public class SWCMainManager : MonoBehaviour
     public Text txtDailyPay;
     public Text txtClothes;
 
-    void InitAll()
+    void Awake()
+    {
+        bm = GameObject.Find("GameDirector").GetComponent<BackpackManager>();
+    }
+
+    public void InitAll()
     {
         correctAnswerCount = 0;
+        bpTotalCount = bm.Items.Count;
+        TotalCount = 10;
     }
 
     // throw 버튼 onClick 시 실행
-    void trashThrow()
+    public void trashThrow()
     {
+        selectItem = throwObject.transform.GetChild(0).name.ToString();
+        Debug.Log(selectItem);
         //현재 선택된 것이 null이 아니라면
         //현재 선택된 아이템의 타입과 쓰레기통의 타입이 맞는지 확인
-        if (player2.trashtype.type.ToString() == "plastic")
+        if (txtType.text==selectItem)
         {
             //맞았으면 correctCount 1증가
             correctAnswerCount += 1;
+            Destroy(throwObject.transform.GetChild(0).gameObject);
+        }
+        else
+        {
+            Destroy(throwObject.transform.GetChild(0).gameObject);
         }
         //가방에서 해당 아이템 지우기
         //선택된 거 null로 변경
@@ -49,10 +68,10 @@ public class SWCMainManager : MonoBehaviour
     }
 
     //제한시간 종료 or 가방 아이템 0개라면 실행(결과)
-    void calcResult()
+    public void calcResult()
     {
         //throw창 올려져 있으면 아래로 내리기
-        if (player2.nearObject != null)
+        if (true)
         {
             ThrowGroup.anchoredPosition = Vector3.down * 1000;
         }
@@ -61,9 +80,6 @@ public class SWCMainManager : MonoBehaviour
 
         //일당 얼마줄지
         //옷 얼마나 만들지
-
-        //결과창 띄우기
-        ResultGroup.anchoredPosition = Vector3.zero;
     }
 
 }
