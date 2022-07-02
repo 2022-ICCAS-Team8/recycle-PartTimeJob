@@ -32,7 +32,6 @@ public class BackpackManager : MonoBehaviour
         bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
         bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
         bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
-
     }
 
     void Start()
@@ -43,13 +42,9 @@ public class BackpackManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Tab))
-            SetBackpackOpen(!bpWindow.activeInHierarchy);
-    }
-
-
-    public void OnClickBackpackButton()
-    {
-        SetBackpackOpen(!bpWindow.activeInHierarchy);
+        {
+            ToggleBackpack();
+        }
     }
 
     public void OpenBackpack()
@@ -97,19 +92,19 @@ public class BackpackManager : MonoBehaviour
         bpWindow.SetActive(false);
 
         // destroy all children.
-        // 'i' must be started from 1, since index 0 means itself, not a child.
+        // 'i' must be started from 5, since index 0 means itself and idx 1~5 means Samples.
         for (int i=1+5; i < bpInnerWindow.transform.childCount; i++)
         {
             Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
         }
     }
 
-    public void SetBackpackOpen(bool isOpen)
+    public void ToggleBackpack()
     {
-        if (isOpen)
-            OpenBackpack();
-        else
+        if (bpWindow.activeInHierarchy)
             CloseBackpack();
+        else
+            OpenBackpack();
     }
 
     public void Collect(GameObject obj)

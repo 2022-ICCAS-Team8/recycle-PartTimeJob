@@ -14,12 +14,15 @@ public class GameDirector : MonoBehaviour
     {
         // set frame rate up to 60 fps ASAP
         Application.targetFrameRate = 60;
+    }
 
+    private void Start()
+    {
         StartPanel.SetActive(true);
         GamePanel.SetActive(false);
         player.SetActive(false);
     }
-    
+
     public void GameStart()
     {
         StartPanel.SetActive(false);
