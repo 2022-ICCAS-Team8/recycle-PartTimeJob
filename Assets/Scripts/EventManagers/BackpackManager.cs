@@ -34,7 +34,7 @@ public class BackpackManager : MonoBehaviour
         bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
         bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
         bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
-        bpButton= GameObject.Find("bp_button");
+        bpButton = GameObject.Find("bp_button");
     }
 
     void Start()
@@ -54,8 +54,6 @@ public class BackpackManager : MonoBehaviour
     {
         float innerWidth = bpInnerWindow.GetComponent<RectTransform>().rect.width;
         GameObject icon = null;
-        GameObject btn=null;
-        string btnName = "";
 
         // create contents
         for (int i=0; i < Items.Count; i++)
@@ -73,8 +71,6 @@ public class BackpackManager : MonoBehaviour
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
             slot.AddComponent<BoxCollider2D>();
 
-            btnName = Items[i].Type.ToString();
-
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
             else if (Items[i].Type == TrashType.Type.Glass)
@@ -86,13 +82,8 @@ public class BackpackManager : MonoBehaviour
             else if (Items[i].Type == TrashType.Type.Garbage)
                 icon = Instantiate(bpSampleIconGarbage, slot.transform, false);
 
-            btn = Instantiate(bpButton, slot.transform, false);
-            btn.name = btnName;
-
             icon.transform.localPosition = new Vector3(0, 0);
-            btn.transform.localPosition = new Vector3(0, 0);
             icon.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
-            btn.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
 
         }
 

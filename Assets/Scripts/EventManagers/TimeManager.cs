@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-      float setTime = 10;
+      float setTime = 300.0f;
       public Text gameTime;
       int min;
       float sec;

@@ -22,23 +22,23 @@ public class PlayerController: MonoBehaviour
     float displayRotation;
     Vector3 keyDirection;
 
+    Rigidbody rigid;
     Animator anim;
 
     private void Awake()
     {
+        rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         mouseRotationX = transform.eulerAngles.y;
         mouseRotationY = 0.0f;
         wasdRotation = 0.0f;
     }
-
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         GetInput();
         Calculate();
-        Rotate();
         Walk();
+        Rotate();
         Animate();
     }
 
@@ -98,13 +98,22 @@ public class PlayerController: MonoBehaviour
     private void Walk()
     {
         float internalRotationInRad = Mathf.Deg2Rad * internalRotation;
-        transform.localPosition +=
-            new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad))
-            * keyDirection.magnitude * Time.deltaTime * speed;
+        //transform.localPosition +=
+        //    new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad))
+        //    * Time.deltaTime * speed;
+        if (keyDirection != Vector3.zero)
+        {
+            rigid.velocity =
+                new Vector3(Mathf.Sin(internalRotationInRad), 0, Mathf.Cos(internalRotationInRad)) * speed;
+        }
+        else
+        {
+            rigid.velocity = Vector3.zero;
+        }
     }
 
     private void Animate()
     {
-        anim.SetBool("isWalking", keyDirection != Vector3.zero);
+        anim.SetBool("isWalking", rigid.velocity != Vector3.zero);
     }
 }
