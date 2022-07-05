@@ -10,6 +10,9 @@ public class GameDirector : MonoBehaviour
     public GameObject GamePanel;
     public GameObject player;
 
+    public GameObject StartGroup;
+    public GameObject LoginGroup;
+
     private void Awake()
     {
         // set frame rate up to 60 fps ASAP
@@ -28,5 +31,17 @@ public class GameDirector : MonoBehaviour
         StartPanel.SetActive(false);
         GamePanel.SetActive(true);
         player.SetActive(true);
+    }
+
+    public void Login()
+    {
+        StartGroup.SetActive(false);
+        LoginGroup.SetActive(true);
+    }
+
+    public void BackMain()
+    {
+        StartGroup.SetActive(true);
+        LoginGroup.SetActive(false);
     }
 }
