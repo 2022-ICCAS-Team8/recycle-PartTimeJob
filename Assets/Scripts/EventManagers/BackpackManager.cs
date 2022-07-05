@@ -14,27 +14,16 @@ public class BackpackManager : MonoBehaviour
     // width of border of backpack UI (in pixels)
     const int BACKPACK_GAP = 20;
 
-    GameObject bpWindow;
-    GameObject bpInnerWindow;
-    GameObject bpSampleSlot;
+    public GameObject bpWindow;
+    public GameObject bpInnerWindow;
+    public GameObject bpSampleSlot;
 
-    GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage, bpButton;
+    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
     public GameObject throwObject;
 
     private void Awake()
     {
         Items = new List<RecyclableItem>();
-
-        bpWindow = GameObject.Find("BackpackWindow");
-        bpInnerWindow = GameObject.Find("bp_InnerWindow");
-        bpSampleSlot = GameObject.Find("bp_SampleSlot");
-
-        bpSampleIconPlastic = GameObject.Find("bp_SampleIconPlastic");
-        bpSampleIconGlass = GameObject.Find("bp_SampleIconGlass");
-        bpSampleIconMetal = GameObject.Find("bp_SampleIconMetal");
-        bpSampleIconPaper = GameObject.Find("bp_SampleIconPaper");
-        bpSampleIconGarbage = GameObject.Find("bp_SampleIconGarbage");
-        bpButton = GameObject.Find("bp_button");
     }
 
     void Start()
@@ -69,7 +58,11 @@ public class BackpackManager : MonoBehaviour
             slot.transform.localPosition = new Vector3(x, y);
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
-            slot.AddComponent<BoxCollider2D>();
+            // add click listener
+            slot.GetComponent<Button>().onClick.AddListener(() => {
+                var idx = i;
+                itemClick(1); // to fix
+            });
 
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
@@ -117,23 +110,40 @@ public class BackpackManager : MonoBehaviour
         Destroy(obj);
     }
 
-    public void itemClick()
+    public void itemClick(int idx)
     {
-        GameObject icon = null;
-        string itemType = EventSystem.current.currentSelectedGameObject.name;
-        Debug.Log(itemType);
-        if (itemType == "Plastic")
-            icon = Instantiate(bpSampleIconPlastic, throwObject.transform, false);
-        else if (itemType == "Glass")
-            icon = Instantiate(bpSampleIconGlass, throwObject.transform, false);
-        else if (itemType == "Metal")
-            icon = Instantiate(bpSampleIconMetal, throwObject.transform, false);
-        else if (itemType == "Paper")
-            icon = Instantiate(bpSampleIconPaper, throwObject.transform, false);
-        else if (itemType == "Garbage")
-            icon = Instantiate(bpSampleIconGarbage, throwObject.transform, false);
+        Debug.Log(idx);
 
-        icon.name = itemType;
+        GameObject icon = null;
+        TrashType.Type itemType = Items[idx].Type;
+        if (itemType == TrashType.Type.Plastic)
+        {
+            icon = Instantiate(bpSampleIconPlastic, throwObject.transform, false);
+            icon.name = "Plastic";
+        }
+        else if (itemType == TrashType.Type.Glass)
+        {
+            icon = Instantiate(bpSampleIconGlass, throwObject.transform, false);
+            icon.name = "Glass";
+
+        }
+        else if (itemType == TrashType.Type.Metal)
+        {
+            icon = Instantiate(bpSampleIconMetal, throwObject.transform, false);
+            icon.name = "Metal";
+
+        }
+        else if (itemType == TrashType.Type.Paper)
+        {
+            icon = Instantiate(bpSampleIconPaper, throwObject.transform, false);
+            icon.name = "Paper";
+
+        }
+        else if (itemType == TrashType.Type.Garbage)
+        {
+            icon = Instantiate(bpSampleIconGarbage, throwObject.transform, false);
+            icon.name = "Garbage";
+        }
         icon.transform.localPosition = new Vector3(-150, 150);
         icon.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 300);
         CloseBackpack();
