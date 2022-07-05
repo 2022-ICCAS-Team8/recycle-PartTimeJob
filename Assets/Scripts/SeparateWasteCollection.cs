@@ -28,9 +28,12 @@ public class SeparateWasteCollection : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        uiGroup.anchoredPosition = Vector3.down * 1000;
-        nearObject = null;
-        Destroy(throwObject.transform.GetChild(0).gameObject);
+        if (collision.collider.gameObject.CompareTag("Trashbin"))
+        {
+            uiGroup.anchoredPosition = Vector3.down * 1000;
+            nearObject = null;
+            Destroy(throwObject.transform.GetChild(0).gameObject);
+        }
     }
 
     void Interaction()

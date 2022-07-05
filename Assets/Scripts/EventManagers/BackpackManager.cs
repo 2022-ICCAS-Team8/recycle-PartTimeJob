@@ -20,6 +20,7 @@ public class BackpackManager : MonoBehaviour
 
     public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
     public GameObject throwObject;
+    public int lastSelected { get; set; }
 
     private void Awake()
     {
@@ -59,10 +60,8 @@ public class BackpackManager : MonoBehaviour
             // set width and height
             slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
             // add click listener
-            slot.GetComponent<Button>().onClick.AddListener(() => {
-                var idx = i;
-                itemClick(1); // to fix
-            });
+            int idx = i; // copied to prevent closure problem
+            slot.GetComponent<Button>().onClick.AddListener(() => itemClick(idx));
 
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
@@ -112,9 +111,19 @@ public class BackpackManager : MonoBehaviour
 
     public void itemClick(int idx)
     {
-        Debug.Log(idx);
-
         GameObject icon = null;
+        lastSelected = idx;
+
+        // clear all throwObject made before
+        if (throwObject.transform.childCount > 0)
+        {
+            for (int i = 0; i < throwObject.transform.childCount; i++)
+            {
+                Destroy(throwObject.transform.GetChild(i).gameObject);
+                Debug.Log("1");
+            }
+        }
+
         TrashType.Type itemType = Items[idx].Type;
         if (itemType == TrashType.Type.Plastic)
         {

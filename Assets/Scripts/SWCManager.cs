@@ -56,14 +56,12 @@ public class SWCManager : MonoBehaviour
         {
             //맞았으면 correctCount 1증가
             correctAnswerCount += 1;
-            Destroy(throwObject.transform.GetChild(0).gameObject);
         }
-        else
-        {
-            Destroy(throwObject.transform.GetChild(0).gameObject);
-        }
+        Destroy(throwObject.transform.GetChild(0).gameObject);
         //가방에서 해당 아이템 지우기
-        //선택된 거 null로 변경
+        bm.Items.RemoveAt(bm.lastSelected);
+        //선택된 거를 취소
+        bm.lastSelected = -1;
         //throwObject false(안보이도록) 하기 <아이템 선택 시 true(보이도록)>
     }
 
