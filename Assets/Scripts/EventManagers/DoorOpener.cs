@@ -75,10 +75,8 @@ public class DoorOpener : MonoBehaviour
 
                 if (obj.CompareTag("DoorClosed"))
                 {
-                    Debug.Log("dc");
                     if (dm.isLocked && CanUnlock(obj))
                     {
-                        Debug.Log("unl");
                         dm.isLocked = false;
                         bm.ConsumeHoldingItem();
                     }
