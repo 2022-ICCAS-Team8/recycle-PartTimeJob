@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RayCaster : MonoBehaviour
+public class DoorOpener : MonoBehaviour
 {
     public GameObject player;
 
     public float detectDistance;
 
     public GameObject popup;
+    public GameObject popupImage;
     public Text popupLabel;
+
+    BackpackManager bm;
 
     void Start()
     {
+        bm = gameObject.GetComponent<BackpackManager>();
+
         popup.SetActive(false);
     }
 
@@ -30,7 +35,26 @@ public class RayCaster : MonoBehaviour
 
             if (obj.CompareTag("DoorClosed") || obj.CompareTag("ClosetDoorClosed"))
             {
-                popupLabel.text = "Right click to open";
+                DoorData dm = obj.GetComponent<DoorData>();
+
+                if (dm.isLocked)
+                {
+                    if (CanUnlock(obj))
+                    {
+                        popupImage.SetActive(true);
+                        popupLabel.text = "Right click to unlock";
+                    }
+                    else
+                    {
+                        popupImage.SetActive(false);
+                        popupLabel.text = "This door is locked!";
+                    }
+                }
+                else
+                {
+                    popupImage.SetActive(true);
+                    popupLabel.text = "Right click to open";
+                }
                 popup.SetActive(true);
             }
             else if (obj.CompareTag("DoorOpened") || obj.CompareTag("ClosetDoorOpened"))
@@ -45,14 +69,38 @@ public class RayCaster : MonoBehaviour
 
             if (Input.GetMouseButtonUp(1)) // right click
             {
+                DoorData dm = obj.GetComponent<DoorData>();
+                if (!dm)
+                    return; // not door
+
                 if (obj.CompareTag("DoorClosed"))
-                    StartCoroutine(OpenDoor(obj));
+                {
+                    Debug.Log("dc");
+                    if (dm.isLocked && CanUnlock(obj))
+                    {
+                        Debug.Log("unl");
+                        dm.isLocked = false;
+                        bm.ConsumeHoldingItem();
+                    }
+
+                    if (!dm.isLocked)
+                        StartCoroutine(OpenDoor(obj));
+                }
 
                 else if (obj.CompareTag("DoorOpened"))
                     StartCoroutine(CloseDoor(obj));
 
                 else if (obj.CompareTag("ClosetDoorClosed"))
-                    StartCoroutine(OpenClosetDoor(obj));
+                {
+                    if (dm.isLocked && CanUnlock(obj))
+                    {
+                        dm.isLocked = false;
+                        bm.ConsumeHoldingItem();
+                    }
+
+                    if (!dm.isLocked)
+                        StartCoroutine(OpenClosetDoor(obj));
+                }
 
                 else if (obj.CompareTag("ClosetDoorOpened"))
                     StartCoroutine(CloseClosetDoor(obj));
@@ -89,5 +137,14 @@ public class RayCaster : MonoBehaviour
         yield return new WaitForSeconds(.5f);
     }
 
-
+    bool CanUnlock(GameObject door)
+    {
+        GameItem item = bm.GetHoldingItem();
+        if (item is KeyItem)
+        {
+            if (((KeyItem)item).DoorID == door.GetComponent<DoorData>().KeyID)
+                return true;
+        }
+        return false;
+    }
 }

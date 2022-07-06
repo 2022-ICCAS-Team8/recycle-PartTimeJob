@@ -59,9 +59,9 @@ public class SWCManager : MonoBehaviour
         }
         Destroy(throwObject.transform.GetChild(0).gameObject);
         //가방에서 해당 아이템 지우기
-        bm.Items.RemoveAt(bm.lastSelected);
+        bm.ConsumeHoldingItem();
         //선택된 거를 취소
-        bm.lastSelected = -1;
+        bm.lastSelectedIndex = -1;
         //throwObject false(안보이도록) 하기 <아이템 선택 시 true(보이도록)>
     }
 

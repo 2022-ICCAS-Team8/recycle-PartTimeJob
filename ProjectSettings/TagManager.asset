@@ -10,7 +10,7 @@ TagManager:
   - DoorOpened
   - ClosetDoorClosed
   - ClosetDoorOpened
-  - Recyclable
+  - GameItem
   layers:
   - Default
   - TransparentFX

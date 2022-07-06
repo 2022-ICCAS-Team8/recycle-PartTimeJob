@@ -6,29 +6,47 @@ using UnityEngine.EventSystems;
 
 public class BackpackManager : MonoBehaviour
 {
-    public List<RecyclableItem> Items { get; set; }
+    public List<GameItem> Items { get; set; }
 
     // number of backpack slots per row
     const int BACKPACK_SLOT = 8;
 
     // width of border of backpack UI (in pixels)
-    const int BACKPACK_GAP = 20;
+    const int BACKPACK_GAP = 10;
+
+    // ratio of icon's width compared to slot's
+    const float ICON_WIDTH_RATIO = 0.75f;
+
+    // color selected, unselected
+    public static readonly Color COLOR_SELECTED = new Color32(96, 96, 96, 255);
+    public static readonly Color COLOR_UNSELECTED = new Color32(32, 32, 32, 255);
+
+    public GameObject player;
+    PlayerController pc;
 
     public GameObject bpWindow;
     public GameObject bpInnerWindow;
     public GameObject bpSampleSlot;
 
-    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
+    public GameObject handIcon;
+
     public GameObject throwObject;
-    public int lastSelected { get; set; }
+
+    // index of lastSelected slot
+    public int lastSelectedIndex { get; set; }
 
     private void Awake()
     {
-        Items = new List<RecyclableItem>();
+        Items = new List<GameItem>();
+        lastSelectedIndex = -1;
     }
 
     void Start()
     {
+        pc = player.GetComponent<PlayerController>();
+
+        bpSampleSlot.GetComponent<Image>().color = COLOR_UNSELECTED;
+
         bpWindow.SetActive(false);
     }
 
@@ -38,48 +56,55 @@ public class BackpackManager : MonoBehaviour
         {
             ToggleBackpack();
         }
+
+        if (lastSelectedIndex == -1)
+        {
+            handIcon.GetComponent<Image>().sprite = null;
+            handIcon.GetComponent<Image>().color = Color.clear; // transparent
+        }
+        else
+        {
+            handIcon.GetComponent<Image>().sprite = Items[lastSelectedIndex].Sprite;
+            handIcon.GetComponent<Image>().color = Color.white;
+        }
     }
 
     public void OpenBackpack()
     {
         float innerWidth = bpInnerWindow.GetComponent<RectTransform>().rect.width;
-        GameObject icon = null;
 
         // create contents
         for (int i=0; i < Items.Count; i++)
         {
+            int idx = i;
+
             float w = (innerWidth - (BACKPACK_SLOT + 1) * BACKPACK_GAP) / BACKPACK_SLOT;
             float x =  (i % BACKPACK_SLOT) * (BACKPACK_GAP + w) + BACKPACK_GAP;
             float y = -(i / BACKPACK_SLOT) * (BACKPACK_GAP + w) - BACKPACK_GAP;
 
             GameObject slot = Instantiate(bpSampleSlot, bpInnerWindow.transform, false);
-            // set name
             slot.name = "bp_Slot" + i;
-            // set local position
             slot.transform.localPosition = new Vector3(x, y);
-            // set width and height
-            slot.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
-            // add click listener
-            int idx = i; // copied to prevent closure problem
-            slot.GetComponent<Button>().onClick.AddListener(() => itemClick(idx));
+            if (i == lastSelectedIndex)
+                slot.GetComponent<Image>().color = COLOR_SELECTED;
+            slot.GetComponent<Button>().onClick.AddListener(() => OnClickItem(idx)); // not 'i' but 'idx' to prevent closure problem
 
-            if (Items[i].Type == TrashType.Type.Plastic)
-                icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
-            else if (Items[i].Type == TrashType.Type.Glass)
-                icon = Instantiate(bpSampleIconGlass, slot.transform, false);
-            else if (Items[i].Type == TrashType.Type.Metal)
-                icon = Instantiate(bpSampleIconMetal, slot.transform, false);
-            else if (Items[i].Type == TrashType.Type.Paper)
-                icon = Instantiate(bpSampleIconPaper, slot.transform, false);
-            else if (Items[i].Type == TrashType.Type.Garbage)
-                icon = Instantiate(bpSampleIconGarbage, slot.transform, false);
+            GameObject icon = new GameObject();
 
-            icon.transform.localPosition = new Vector3(0, 0);
-            icon.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
+            RectTransform trans = icon.AddComponent<RectTransform>();
+            trans.SetParent(slot.transform);
+            trans.localScale = Vector3.one;
+            trans.anchoredPosition = new Vector3(0, 0);
+            trans.sizeDelta = new Vector2(w, w) * ICON_WIDTH_RATIO;
 
+            Image img = icon.AddComponent<Image>();
+            img.sprite = Items[i].Sprite;
         }
 
         bpWindow.SetActive(true);
+
+        // freeze player rotation
+        pc.isMouseFrozen = true;
     }
 
 
@@ -88,11 +113,17 @@ public class BackpackManager : MonoBehaviour
         bpWindow.SetActive(false);
 
         // destroy all children.
-        // 'i' must be started from 5, since index 0 means itself and idx 1~5 means Samples.
-        for (int i=1+6; i < bpInnerWindow.transform.childCount; i++)
+        if (bpInnerWindow.transform.childCount > 0)
         {
-            Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
+            // start from 1 because of SampleSlot
+            for (int i = 1; i < bpInnerWindow.transform.childCount; i++)
+            {
+                Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
+            }
         }
+
+        // melt player rotation
+        pc.isMouseFrozen = false;
     }
 
     public void ToggleBackpack()
@@ -105,14 +136,18 @@ public class BackpackManager : MonoBehaviour
 
     public void Collect(GameObject obj)
     {
-        Items.Add(obj.GetComponent<RecyclableItem>());
+        Items.Add(obj.GetComponent<GameItem>());
         Destroy(obj);
     }
 
-    public void itemClick(int idx)
+    public void OnClickItem(int idx)
     {
-        GameObject icon = null;
-        lastSelected = idx;
+        // re-highlight selected slot
+        if (lastSelectedIndex != -1)
+            GameObject.Find("bp_Slot" + lastSelectedIndex).GetComponent<Image>().color = COLOR_UNSELECTED;
+        lastSelectedIndex = idx;
+        GameObject.Find("bp_Slot" + lastSelectedIndex).GetComponent<Image>().color = COLOR_SELECTED;
+
 
         // clear all throwObject made before
         if (throwObject.transform.childCount > 0)
@@ -120,42 +155,41 @@ public class BackpackManager : MonoBehaviour
             for (int i = 0; i < throwObject.transform.childCount; i++)
             {
                 Destroy(throwObject.transform.GetChild(i).gameObject);
-                Debug.Log("1");
             }
         }
 
-        TrashType.Type itemType = Items[idx].Type;
-        if (itemType == TrashType.Type.Plastic)
-        {
-            icon = Instantiate(bpSampleIconPlastic, throwObject.transform, false);
-            icon.name = "Plastic";
-        }
-        else if (itemType == TrashType.Type.Glass)
-        {
-            icon = Instantiate(bpSampleIconGlass, throwObject.transform, false);
-            icon.name = "Glass";
+        // make icon to SWC
+        GameObject icon = new GameObject();
 
-        }
-        else if (itemType == TrashType.Type.Metal)
-        {
-            icon = Instantiate(bpSampleIconMetal, throwObject.transform, false);
-            icon.name = "Metal";
+        RectTransform trans = icon.AddComponent<RectTransform>();
+        trans.SetParent(throwObject.transform);
+        trans.localScale = Vector3.one;
+        trans.localPosition = Vector2.zero;
+        trans.sizeDelta = new Vector2(300, 300);
 
-        }
-        else if (itemType == TrashType.Type.Paper)
-        {
-            icon = Instantiate(bpSampleIconPaper, throwObject.transform, false);
-            icon.name = "Paper";
+        Image img = icon.AddComponent<Image>();
+        img.sprite = Items[idx].Sprite;
 
-        }
-        else if (itemType == TrashType.Type.Garbage)
+        if (Items[idx] is RecyclableItem)
         {
-            icon = Instantiate(bpSampleIconGarbage, throwObject.transform, false);
-            icon.name = "Garbage";
+            icon.name = ((RecyclableItem)Items[idx]).Type.ToString();
         }
-        icon.transform.localPosition = new Vector3(-150, 150);
-        icon.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 300);
-        CloseBackpack();
-        
+        else
+        {
+            icon.name = "Other";
+        }
+    }
+
+    public GameItem GetHoldingItem()
+    {
+        if (lastSelectedIndex == -1)
+            return null;
+        return Items[lastSelectedIndex];
+    }
+
+    public void ConsumeHoldingItem()
+    {
+        if (lastSelectedIndex != -1)
+            Items.RemoveAt(lastSelectedIndex);
     }
 }
