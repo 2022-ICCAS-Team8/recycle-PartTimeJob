@@ -60,6 +60,8 @@ public class BackpackManager : MonoBehaviour
             ToggleBackpack();
         }
 
+        Debug.Log(lastSelectedIndex);
+
         if (lastSelectedIndex == -1 || Items.Count == 0)
         {
             handIcon.GetComponent<Image>().sprite = null;
@@ -192,6 +194,8 @@ public class BackpackManager : MonoBehaviour
         }
         else
         {
+            Debug.Log(idx);
+
             img.sprite = Items[idx].Sprite;
             img.color = Color.white;
         }
