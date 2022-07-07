@@ -10,6 +10,8 @@ public class GameDirector : MonoBehaviour
     public GameObject GamePanel;
     public GameObject player;
 
+    public GameObject SignupGroup;
+
     public GameObject StartGroup;
     public GameObject LoginGroup;
 
@@ -39,6 +41,10 @@ public class GameDirector : MonoBehaviour
         LoginGroup.SetActive(true);
     }
 
+    public void Signup(){
+      LoginGroup.SetActive(false);
+      SignupGroup.SetActive(true);
+    }
     public void BackMain()
     {
         StartGroup.SetActive(true);

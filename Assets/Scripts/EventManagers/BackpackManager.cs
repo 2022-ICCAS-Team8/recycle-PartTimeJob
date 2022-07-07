@@ -28,7 +28,7 @@ public class BackpackManager : MonoBehaviour
 
     void Start()
     {
-        bpWindow.SetActive(false);
+      bpWindow.SetActive(false);
     }
 
     void Update()
@@ -87,13 +87,15 @@ public class BackpackManager : MonoBehaviour
     public void CloseBackpack()
     {
         bpWindow.SetActive(false);
-
-        // destroy all children.
-        // 'i' must be started from 5, since index 0 means itself and idx 1~5 means Samples.
         for (int i=1+6; i < bpInnerWindow.transform.childCount; i++)
         {
             Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
         }
+
+
+        // destroy all children.
+        // 'i' must be started from 5, since index 0 means itself and idx 1~5 means Samples.
+        
     }
 
     public void ToggleBackpack()
