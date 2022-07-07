@@ -27,6 +27,8 @@ public class BackpackManager : MonoBehaviour
     public GameObject bpWindow;
     public GameObject bpInnerWindow;
     public GameObject bpSampleSlot;
+    public GameObject bpTaskButton;
+    public Text bpTaskButtonText;
 
     public GameObject handIcon;
 
@@ -48,6 +50,7 @@ public class BackpackManager : MonoBehaviour
         bpSampleSlot.GetComponent<Image>().color = COLOR_UNSELECTED;
 
         bpWindow.SetActive(false);
+        bpTaskButton.SetActive(false);
     }
 
     void Update()
@@ -57,7 +60,7 @@ public class BackpackManager : MonoBehaviour
             ToggleBackpack();
         }
 
-        if (lastSelectedIndex == -1)
+        if (lastSelectedIndex == -1 || Items.Count == 0)
         {
             handIcon.GetComponent<Image>().sprite = null;
             handIcon.GetComponent<Image>().color = Color.clear; // transparent
@@ -99,7 +102,9 @@ public class BackpackManager : MonoBehaviour
 
             Image img = icon.AddComponent<Image>();
             img.sprite = Items[i].Sprite;
+
         }
+        CheckToActivateTaskButton();
 
         bpWindow.SetActive(true);
 
@@ -150,10 +155,13 @@ public class BackpackManager : MonoBehaviour
         // re-highlight selected slot
         if (lastSelectedIndex != -1)
             GameObject.Find("bp_Slot" + lastSelectedIndex).GetComponent<Image>().color = COLOR_UNSELECTED;
+
         lastSelectedIndex = idx;
         GameObject.Find("bp_Slot" + lastSelectedIndex).GetComponent<Image>().color = COLOR_SELECTED;
 
-        MakeIcon(idx);
+        MakeIcon(lastSelectedIndex);
+
+        CheckToActivateTaskButton();
     }
 
     public void MakeIcon(int idx)
@@ -177,7 +185,16 @@ public class BackpackManager : MonoBehaviour
         trans.sizeDelta = new Vector2(300, 300);
 
         Image img = icon.AddComponent<Image>();
-        img.sprite = Items[idx].Sprite;
+        if (idx == -1)
+        {
+            img.sprite = null;
+            img.color = Color.clear;
+        }
+        else
+        {
+            img.sprite = Items[idx].Sprite;
+            img.color = Color.white;
+        }
 
         if (Items[idx] is RecyclableItem)
         {
@@ -200,5 +217,41 @@ public class BackpackManager : MonoBehaviour
     {
         if (lastSelectedIndex != -1)
             Items.RemoveAt(lastSelectedIndex);
+
+        MakeIcon(lastSelectedIndex);
+    }
+
+    private void CheckToActivateTaskButton()
+    {
+        if (lastSelectedIndex == -1)
+        {
+            bpTaskButton.SetActive(false);
+            return;
+        }
+
+        if (Items[lastSelectedIndex] is ComplexItem)
+        {
+            ComplexItem item = Items[lastSelectedIndex] as ComplexItem;
+
+            bpTaskButtonText.text = item.taskName;
+            bpTaskButton.SetActive(true);
+        }
+        else
+        {
+            bpTaskButton.SetActive(false);
+        }
+    }
+
+    public void DoTask()
+    {
+        ComplexItem item = GetHoldingItem() as ComplexItem;
+
+        ConsumeHoldingItem();
+        foreach (GameItem byproduct in item.byproducts)
+        {
+            Items.Add(byproduct);
+        }
+        CloseBackpack();
+        OpenBackpack();
     }
 }

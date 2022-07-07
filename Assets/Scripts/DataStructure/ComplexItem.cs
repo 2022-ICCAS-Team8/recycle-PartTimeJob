@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ComplexItem : GameItem
 {
-
+    public string taskName;
+    public List<GameItem> byproducts;
 }

@@ -24,7 +24,7 @@ public class SWCManager : MonoBehaviour
     public RecyclableItem item;
     public float playTime;
     public RectTransform ThrowGroup;
-    
+    public RectTransform alertGroup;
 
     [Header("Result 로직")]
     public RectTransform ResultGroup;
@@ -56,12 +56,18 @@ public class SWCManager : MonoBehaviour
         {
             //맞았으면 correctCount 1증가
             correctAnswerCount += 1;
+            //아이콘 지우기
+            Destroy(throwObject.transform.GetChild(0).gameObject);
+            //가방에서 해당 아이템 지우기
+            bm.ConsumeHoldingItem();
+            //선택된 거를 취소
+            bm.lastSelectedIndex = -1;
         }
-        Destroy(throwObject.transform.GetChild(0).gameObject);
-        //가방에서 해당 아이템 지우기
-        bm.ConsumeHoldingItem();
-        //선택된 거를 취소
-        bm.lastSelectedIndex = -1;
+        else
+        {
+            // Think again 띄우기
+            alertGroup.anchoredPosition = Vector3.zero;
+        }
         //throwObject false(안보이도록) 하기 <아이템 선택 시 true(보이도록)>
     }
 
@@ -78,6 +84,11 @@ public class SWCManager : MonoBehaviour
 
         //일당 얼마줄지
         //옷 얼마나 만들지
+    }
+
+    public void CloseAlert()
+    {
+        alertGroup.anchoredPosition = Vector3.down * 3000;
     }
 
 }
