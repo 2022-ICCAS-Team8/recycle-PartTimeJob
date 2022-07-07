@@ -8207,7 +8207,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Date: '
+  m_Text: 'Time:'
 --- !u!222 &1340657678
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10892,6 +10892,7 @@ MonoBehaviour:
   player: {fileID: 958122639}
   StartGroup: {fileID: 442421629}
   LoginGroup: {fileID: 949136871}
+  labelCollectNum: {fileID: 1720648114}
 --- !u!114 &1964763021
 MonoBehaviour:
   m_ObjectHideFlags: 0

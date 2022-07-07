@@ -75,14 +75,14 @@ public class DoorOpener : MonoBehaviour
 
                 if (obj.CompareTag("DoorClosed"))
                 {
+                    if (!dm.isLocked)
+                        StartCoroutine(OpenDoor(obj));
+
                     if (dm.isLocked && CanUnlock(obj))
                     {
                         dm.isLocked = false;
                         bm.ConsumeHoldingItem();
                     }
-
-                    if (!dm.isLocked)
-                        StartCoroutine(OpenDoor(obj));
                 }
 
                 else if (obj.CompareTag("DoorOpened"))
@@ -90,14 +90,14 @@ public class DoorOpener : MonoBehaviour
 
                 else if (obj.CompareTag("ClosetDoorClosed"))
                 {
+                    if (!dm.isLocked)
+                        StartCoroutine(OpenClosetDoor(obj));
+
                     if (dm.isLocked && CanUnlock(obj))
                     {
                         dm.isLocked = false;
                         bm.ConsumeHoldingItem();
                     }
-
-                    if (!dm.isLocked)
-                        StartCoroutine(OpenClosetDoor(obj));
                 }
 
                 else if (obj.CompareTag("ClosetDoorOpened"))

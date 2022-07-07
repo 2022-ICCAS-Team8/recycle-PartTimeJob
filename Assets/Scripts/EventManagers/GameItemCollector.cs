@@ -7,10 +7,12 @@ public class GameItemCollector : MonoBehaviour
     public float detectDistance;
 
     GameObject popup;
+    GameDirector gd;
     BackpackManager bm;
     private void Awake()
     {
         popup = GameObject.Find("PopupCollect");
+        gd = GameObject.Find("GameDirector").GetComponent<GameDirector>();
         bm = GameObject.Find("GameDirector").GetComponent<BackpackManager>();
     }
 
@@ -36,6 +38,10 @@ public class GameItemCollector : MonoBehaviour
             {
                 bm.Collect(nearestObject);
                 popup.SetActive(false);
+                if (nearestObject.GetComponent<GameItem>() is RecyclableItem)
+                {
+                    gd.AddCollectCount();
+                }
             }
         }
         else

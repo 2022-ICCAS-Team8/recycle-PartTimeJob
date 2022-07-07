@@ -13,6 +13,11 @@ public class GameDirector : MonoBehaviour
     public GameObject StartGroup;
     public GameObject LoginGroup;
 
+    public Text labelCollectNum;
+
+    int collectCount = 0;
+    
+
     private void Awake()
     {
         // set frame rate up to 60 fps ASAP
@@ -31,6 +36,8 @@ public class GameDirector : MonoBehaviour
         StartPanel.SetActive(false);
         GamePanel.SetActive(true);
         player.SetActive(true);
+
+        UpdateCollectCount();
     }
 
     public void Login()
@@ -43,5 +50,16 @@ public class GameDirector : MonoBehaviour
     {
         StartGroup.SetActive(true);
         LoginGroup.SetActive(false);
+    }
+
+    public void AddCollectCount()
+    {
+        collectCount++;
+        UpdateCollectCount();
+    }
+
+    public void UpdateCollectCount()
+    {
+        labelCollectNum.text = "Count of item: " + collectCount;
     }
 }

@@ -137,6 +137,10 @@ public class BackpackManager : MonoBehaviour
     public void Collect(GameObject obj)
     {
         Items.Add(obj.GetComponent<GameItem>());
+        if (Items.Count == 1)
+        {
+            lastSelectedIndex = 0;
+        }
         Destroy(obj);
     }
 
