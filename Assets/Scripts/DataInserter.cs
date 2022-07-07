@@ -10,6 +10,8 @@ public class DataInserter : MonoBehaviour
 	public InputField inputPassword;
 	public InputField inputEmail;
 
+  public GameObject ErrorMessage;
+
   public GameObject SignUpGroup;
   public GameObject StartGroup;
 
@@ -48,9 +50,12 @@ public class DataInserter : MonoBehaviour
     IEnumerator Send(WWWForm wF){
       www = new WWW(CreateUserURL, wF);
       yield return www;
+
       if(www.text == "저장성공"){
         SignUpGroup.SetActive(false);
         StartGroup.SetActive(true);
+      } else{
+        ErrorMessage.GetComponent<Text>().text = www.text;
       }
     }
 }

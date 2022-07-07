@@ -11,7 +11,8 @@ public class Login : MonoBehaviour
 
   public GameObject txtUserName;
   public GameObject UserName;
-  
+  public GameObject ErrorMessage;
+
   public GameObject StartGroup;
   public GameObject LoginGroup;
   WWW www;
@@ -59,13 +60,19 @@ public class Login : MonoBehaviour
 
       if(www.error != null){
         print(www.error);
+        UserName.GetComponent<Text>().text = inputUserName.text;
+
       } else{
+        if(www.text != "Wrong password!"){
         txtUserName.GetComponent<Text>().text = inputUserName.text;
         UserName.GetComponent<Text>().text = inputUserName.text;
 
         Debug.Log(www.text);
         LoginGroup.SetActive(false);
         StartGroup.SetActive(true);
+        } else{
+          ErrorMessage.GetComponent<Text>().text = www.text;
+        }
       }
     }
 }
