@@ -55,6 +55,11 @@ public class GameDirector : MonoBehaviour
     public void AddCollectCount()
     {
         collectCount++;
+        if (collectCount == 2)
+        {
+            player.transform.position = new Vector3(-3.7f, 0.5f, -27f); // recycle
+        }
+
         UpdateCollectCount();
     }
 

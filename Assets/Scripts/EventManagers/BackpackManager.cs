@@ -140,6 +140,7 @@ public class BackpackManager : MonoBehaviour
         if (Items.Count == 1)
         {
             lastSelectedIndex = 0;
+            MakeIcon(0);
         }
         Destroy(obj);
     }
@@ -152,7 +153,11 @@ public class BackpackManager : MonoBehaviour
         lastSelectedIndex = idx;
         GameObject.Find("bp_Slot" + lastSelectedIndex).GetComponent<Image>().color = COLOR_SELECTED;
 
+        MakeIcon(idx);
+    }
 
+    public void MakeIcon(int idx)
+    {
         // clear all throwObject made before
         if (throwObject.transform.childCount > 0)
         {
