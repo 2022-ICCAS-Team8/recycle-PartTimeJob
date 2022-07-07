@@ -18,7 +18,7 @@ public class BackpackManager : MonoBehaviour
     public GameObject bpInnerWindow;
     public GameObject bpSampleSlot;
 
-    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage, bpSampleIconNone,bpSampleconMetalCola;
+    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage, bpSampleIconNone,bpSampleIconMetalCola,bpSampleIconGlassCola;
     public GameObject throwObject;
 
     public int lastSelected { get; set; }
@@ -68,12 +68,21 @@ public class BackpackManager : MonoBehaviour
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
             else if (Items[i].Type == TrashType.Type.Glass)
-                icon = Instantiate(bpSampleIconGlass, slot.transform, false);
+            {
+                if (Items[i].itemName == "GlassCola")
+                {
+                    icon= Instantiate(bpSampleIconGlassCola, slot.transform, false);
+                }
+                else
+                {
+                    icon = Instantiate(bpSampleIconGlass, slot.transform, false);
+                }
+            }
             else if (Items[i].Type == TrashType.Type.Metal)
             {
                 if (Items[i].itemName == "MetalCola")
                 {
-                    icon = Instantiate(bpSampleconMetalCola, slot.transform, false);
+                    icon = Instantiate(bpSampleIconMetalCola, slot.transform, false);
                 }
                 else
                 {
@@ -103,7 +112,7 @@ public class BackpackManager : MonoBehaviour
 
         // destroy all children.
         // 'i' must be started from 5, since index 0 means itself and idx 1~5 means Samples.
-        for (int i=1+6; i < bpInnerWindow.transform.childCount; i++)
+        for (int i=1+8; i < bpInnerWindow.transform.childCount; i++)
         {
             Destroy(bpInnerWindow.transform.GetChild(i).gameObject);
         }
@@ -148,13 +157,28 @@ public class BackpackManager : MonoBehaviour
         }
         else if (itemType == TrashType.Type.Glass)
         {
-            icon = Instantiate(bpSampleIconGlass, throwObject.transform, false);
+            if (Items[idx].itemName == "GlassCola")
+            {
+                icon= Instantiate(bpSampleIconGlassCola, throwObject.transform, false);
+            }
+            else
+            {
+                icon = Instantiate(bpSampleIconGlass, throwObject.transform, false);
+            }
             icon.name = "Glass";
 
         }
         else if (itemType == TrashType.Type.Metal)
         {
-            icon = Instantiate(bpSampleIconMetal, throwObject.transform, false);
+            if (Items[idx].itemName == "MetalCola")
+            {
+                icon = Instantiate(bpSampleIconMetalCola, throwObject.transform, false);
+            }
+            else
+            {
+                icon = Instantiate(bpSampleIconMetal, throwObject.transform, false);
+            }
+            
             icon.name = "Metal";
 
         }
@@ -178,7 +202,7 @@ public class BackpackManager : MonoBehaviour
 
         
 
-        if(itemType == TrashType.Type.None)
+        if(itemType == TrashType.Type.None|| Items[idx].itemName == "GlassCola")
         {
             icon.transform.localPosition = new Vector3(-40, 150);
             icon.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 300);
@@ -195,11 +219,19 @@ public class BackpackManager : MonoBehaviour
 
     public void ColaClick()
     {
-        GameObject MetalCola;
-        Debug.Log("Hi");
+        GameObject MetalCola, GlassCola;
+        Debug.Log("Cola Click");
 
         MetalCola=GameObject.Find("MetalCola");
+        GlassCola = GameObject.Find("GlassCola");
 
         Collect(MetalCola);
+        Collect(GlassCola);
+
+        Destroy(throwObject.transform.GetChild(0).gameObject);
+        //가방에서 해당 아이템 지우기
+        Items.RemoveAt(lastSelected);
+        //선택된 거를 취소
+        lastSelected = -1;
     }
 }

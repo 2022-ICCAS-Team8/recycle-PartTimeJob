@@ -83,7 +83,7 @@ public class TimeManager : MonoBehaviour
 
     private void Reset_Timer()
     {
-        setTime = 20;
+        setTime = 40;
         count += 1;
 }
 

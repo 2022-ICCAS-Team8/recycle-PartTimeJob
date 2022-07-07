@@ -368,6 +368,7 @@ Transform:
   - {fileID: 1811344737}
   - {fileID: 1789407599}
   - {fileID: 2079385797}
+  - {fileID: 1334914142}
   m_Father: {fileID: 557039329}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6145,7 +6146,6 @@ GameObject:
   - component: {fileID: 980995862}
   - component: {fileID: 980995865}
   - component: {fileID: 980995864}
-  - component: {fileID: 980995863}
   m_Layer: 5
   m_Name: bp_SampleIconGlassCola
   m_TagString: Untagged
@@ -6173,50 +6173,6 @@ RectTransform:
   m_AnchoredPosition: {x: 126, y: 742}
   m_SizeDelta: {x: 50, y: 100}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &980995863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 980995861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 980995864}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &980995864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7790,6 +7746,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4730063839388620, guid: 0a39e6bc93e859145a2f868ff0277c31, type: 3}
   m_PrefabInstance: {fileID: 2055146403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1334914141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1334914142}
+  - component: {fileID: 1334914143}
+  m_Layer: 0
+  m_Name: GlassCola
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1334914142
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334914141}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 18146099}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1334914143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334914141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5ae9f3542d8c1a4795f0b0d2005df24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  popup: {fileID: 0}
+  Type: 2
+  Sprite: {fileID: 21300000, guid: 2c20668f825220e4882d55fd25da55c1, type: 3}
+  itemName: GlassCola
+  detectDistance: 1
 --- !u!1 &1340657675
 GameObject:
   m_ObjectHideFlags: 0
@@ -7924,7 +7930,6 @@ GameObject:
   - component: {fileID: 1417080867}
   - component: {fileID: 1417080870}
   - component: {fileID: 1417080869}
-  - component: {fileID: 1417080868}
   m_Layer: 5
   m_Name: bp_SampleIconMetalCola
   m_TagString: Untagged
@@ -7952,50 +7957,6 @@ RectTransform:
   m_AnchoredPosition: {x: -35, y: 742}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1417080868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1417080866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1417080869}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1417080869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10897,7 +10858,8 @@ MonoBehaviour:
   bpSampleIconPaper: {fileID: 524892169}
   bpSampleIconGarbage: {fileID: 744649595}
   bpSampleIconNone: {fileID: 1912262043}
-  bpSampleconMetalCola: {fileID: 1417080866}
+  bpSampleIconMetalCola: {fileID: 1417080866}
+  bpSampleIconGlassCola: {fileID: 980995861}
   throwObject: {fileID: 818881638}
 --- !u!114 &1964763027
 MonoBehaviour:
@@ -11993,7 +11955,7 @@ MonoBehaviour:
   player: {fileID: 0}
   popup: {fileID: 0}
   Type: 0
-  Sprite: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: af10d398733eb3d45be849d3c8edc056, type: 3}
   itemName: MetalCola
   detectDistance: 1
 --- !u!224 &2082773574 stripped
