@@ -18,8 +18,9 @@ public class BackpackManager : MonoBehaviour
     public GameObject bpInnerWindow;
     public GameObject bpSampleSlot;
 
-    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage;
+    public GameObject bpSampleIconPlastic, bpSampleIconGlass, bpSampleIconMetal, bpSampleIconPaper, bpSampleIconGarbage, bpSampleIconNone,bpSampleconMetalCola;
     public GameObject throwObject;
+
     public int lastSelected { get; set; }
 
     private void Awake()
@@ -63,16 +64,29 @@ public class BackpackManager : MonoBehaviour
             int idx = i; // copied to prevent closure problem
             slot.GetComponent<Button>().onClick.AddListener(() => itemClick(idx));
 
+
             if (Items[i].Type == TrashType.Type.Plastic)
                 icon = Instantiate(bpSampleIconPlastic, slot.transform, false);
             else if (Items[i].Type == TrashType.Type.Glass)
                 icon = Instantiate(bpSampleIconGlass, slot.transform, false);
             else if (Items[i].Type == TrashType.Type.Metal)
-                icon = Instantiate(bpSampleIconMetal, slot.transform, false);
+            {
+                if (Items[i].itemName == "MetalCola")
+                {
+                    icon = Instantiate(bpSampleconMetalCola, slot.transform, false);
+                }
+                else
+                {
+                    icon = Instantiate(bpSampleIconMetal, slot.transform, false);
+                }
+            }
+                
             else if (Items[i].Type == TrashType.Type.Paper)
                 icon = Instantiate(bpSampleIconPaper, slot.transform, false);
             else if (Items[i].Type == TrashType.Type.Garbage)
                 icon = Instantiate(bpSampleIconGarbage, slot.transform, false);
+            else if (Items[i].Type == TrashType.Type.None)
+                icon = Instantiate(bpSampleIconNone, slot.transform, false);
 
             icon.transform.localPosition = new Vector3(0, 0);
             icon.GetComponent<RectTransform>().sizeDelta = new Vector2(w, w);
@@ -125,6 +139,8 @@ public class BackpackManager : MonoBehaviour
         }
 
         TrashType.Type itemType = Items[idx].Type;
+
+        Debug.Log(itemType);
         if (itemType == TrashType.Type.Plastic)
         {
             icon = Instantiate(bpSampleIconPlastic, throwObject.transform, false);
@@ -153,9 +169,37 @@ public class BackpackManager : MonoBehaviour
             icon = Instantiate(bpSampleIconGarbage, throwObject.transform, false);
             icon.name = "Garbage";
         }
-        icon.transform.localPosition = new Vector3(-150, 150);
-        icon.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 300);
+        else if (itemType == TrashType.Type.None)
+        {
+            icon = Instantiate(bpSampleIconNone, throwObject.transform, false);
+            icon.name = "None";
+            icon.AddComponent<Button>().onClick.AddListener(() => ColaClick());
+        }
+
+        
+
+        if(itemType == TrashType.Type.None)
+        {
+            icon.transform.localPosition = new Vector3(-40, 150);
+            icon.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 300);
+        }
+        else
+        {
+            icon.transform.localPosition = new Vector3(-150, 150);
+            icon.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 300);
+        }
+        
         CloseBackpack();
         
+    }
+
+    public void ColaClick()
+    {
+        GameObject MetalCola;
+        Debug.Log("Hi");
+
+        MetalCola=GameObject.Find("MetalCola");
+
+        Collect(MetalCola);
     }
 }

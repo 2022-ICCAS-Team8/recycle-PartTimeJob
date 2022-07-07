@@ -10,7 +10,9 @@ public class RecyclableItem : MonoBehaviour
 
     public TrashType.Type Type;
     public Sprite Sprite;
-    
+
+    public string itemName;
+
     public float detectDistance;
 
     BackpackManager bm;

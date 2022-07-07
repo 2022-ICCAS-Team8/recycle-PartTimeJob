@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TrashType : MonoBehaviour
 {
-    public enum Type { Metal, Plastic, Glass, Paper, Garbage };
+    public enum Type { Metal, Plastic, Glass, Paper, Garbage, None };
     public Type type;
     public int value;
 }

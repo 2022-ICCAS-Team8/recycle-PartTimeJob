@@ -18,6 +18,8 @@ public class SWCManager : MonoBehaviour
     BackpackManager bm;
     string selectItem = "";
     public Text txtType;
+
+    public RectTransform alert;
     
     [Header("Throw 로직")]
     public Button btnThrow;
@@ -56,12 +58,17 @@ public class SWCManager : MonoBehaviour
         {
             //맞았으면 correctCount 1증가
             correctAnswerCount += 1;
+            Destroy(throwObject.transform.GetChild(0).gameObject);
+            //가방에서 해당 아이템 지우기
+            bm.Items.RemoveAt(bm.lastSelected);
+            //선택된 거를 취소
+            bm.lastSelected = -1;
         }
-        Destroy(throwObject.transform.GetChild(0).gameObject);
-        //가방에서 해당 아이템 지우기
-        bm.Items.RemoveAt(bm.lastSelected);
-        //선택된 거를 취소
-        bm.lastSelected = -1;
+        else
+        {
+            alert.anchoredPosition = Vector3.zero;
+        }
+        
         //throwObject false(안보이도록) 하기 <아이템 선택 시 true(보이도록)>
     }
 
@@ -80,4 +87,9 @@ public class SWCManager : MonoBehaviour
         //옷 얼마나 만들지
     }
 
+    public void check()
+    {
+        alert.anchoredPosition = Vector3.down * 3000;
+        bm.lastSelected = -1;
+    }
 }
